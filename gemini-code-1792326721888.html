@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Інтерактивний практикум: Педагогічне проєктування та фасилітація з ШІ</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #334155;
+            --accent-color: #4f46e5;
+            --accent-hover: #4338ca;
+            --secondary-color: #0ea5e9;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --border-color: #e2e8f0;
+            --light-blue: #e0f2fe;
+            --light-purple: #ee2f7f10;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .hero-img {
+            max-width: 280px;
+            margin: 0 auto 20px;
+            display: block;
+        }
+
+        h1 {
+            color: #1e293b;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            color: #64748b;
+            font-size: 1rem;
+        }
+
+        .tracker {
+            display: flex;
+            justify-content: space-between;
+            background: var(--card-bg);
+            padding: 15px 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+            font-weight: 600;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+        .badge-silver { background: #e2e8f0; color: #475569; }
+        .badge-gold { background: #fef3c7; color: #d97706; }
+
+        .quest-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s;
+        }
+
+        .quest-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+        }
+
+        .quest-num {
+            background: var(--accent-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .quest-title {
+            font-size: 1.2rem;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        .scenario {
+            background: #f8fafc;
+            border-left: 4px solid var(--secondary-color);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.95rem;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .opt-btn {
+            background: #ffffff;
+            border: 2px solid var(--border-color);
+            padding: 12px 18px;
+            border-radius: 10px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            color: var(--text-color);
+        }
+
+        .opt-btn:hover {
+            border-color: var(--accent-color);
+            background: #f4f4ff;
+        }
+
+        .opt-btn.correct {
+            border-color: var(--success-color);
+            background: #ecfdf5;
+            color: #065f46;
+        }
+
+        .opt-btn.incorrect {
+            border-color: var(--error-color);
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .feedback.active {
+            display: block;
+        }
+
+        .feedback.success { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; }
+        .feedback.error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+
+        /* Стилі для завдання з drag&drop або класифікацією */
+        .drop-zone-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .drop-zone-container { grid-template-columns: 1fr; }
+        }
+
+        .drop-box {
+            background: #f1f5f9;
+            border: 2px dashed #cbd5e1;
+            padding: 15px;
+            border-radius: 10px;
+            min-height: 120px;
+        }
+
+        .drop-box h4 {
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #475569;
+        }
+
+        .draggable-item {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .btn-submit {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: var(--accent-hover);
+        }
+
+        #final-score {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            border: 2px solid var(--accent-color);
+        }
+
+        .medal-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <!-- Вбудована SVG ілюстрація -->
+        <svg class="hero-img" viewBox="0 0 300 180" fill="none" xmlns="
